@@ -13,64 +13,157 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
 	<style>
-.my-form {
+	.my-form {
 	font-family: inherit;
 	font-size: inherit;
+
 	resize: none;
+
 	/* hack : sets to min height of the default text */
 	height: 1px;
 }
-</style>
+
+.my-ingredient {
+	font-weight: bold;
+}
+
+.my-content {
+	max-width: 700px;
+}
+
+.time-serves {
+	padding-top: 10px;
+	min-width: 60px;
+}
+	</style>
 </head>
 <body>
 
-<form action="createRecipe.do" method="post">
-	<h1>
-	<textarea name= "recipeTitle" class="form-control my-form" placeholder="Title" type="text"></textarea>
-    </h1>
 
-    <p>
-    <textarea name="steps" placeholder="first instruction" class="form-control my-form" type="text"></textarea>
-    </p>
+<div class="container my-content">
+	
+	 <form action="createRecipe.do" method="post">
 
-     <p>
-    <textarea name="steps" placeholder="second instruction" class="form-control my-form" type="text"></textarea>
-    </p>
+		<h1>
+		<textarea name= "recipeTitle" class="form-control my-form" placeholder="Title" type="text"></textarea>
+	    </h1>
+	    
+	    	<div class="d-flex flex-row">
+	    		<div class="p-2"><h6 class="time-serves">Time: </h6></div>
+	    		<div class="p-2"><input name="time" placeholder="how long" class="form-control"></div>
 
-    <button type="submit" class="btn btn-outline-dark btn-sm">Save</button>
-    <button type="button" class="btn btn-outline-dark btn-sm">New Paragraph</button>
-</form>
+	    	</div>
+
+	    	<div class="d-flex flex-row">
+	    		<div class="p-2"><h6 class="time-serves">Serves: </h6></div>
+	    		<div class="p-2"><input name="servings" placeholder="how many" class="form-control"></div>
+
+	    	</div>
+
+	    <br>
+	    <div  class="container">
+	    	
+	    	<div id="ingredientList">
+	    	<p>
+	    	<textarea name="ingredients" placeholder="first ingredient" class="form-control my-form my-ingredient" type="text"></textarea> 
+	    	</p>
 
 
+	    	</div>
+
+	    	<button id="ingredientButton" type="button" class="btn btn-outline-dark btn-sm">Addtional Ingredient</button>
+	    </div>
+
+	    <br>
+
+	    <div id="stepsList">
+	    <p>
+	    <textarea name="steps" placeholder="first instruction" class="form-control my-form" type="text"></textarea>
+	    </p>
+		</div>
+
+	    <button  id="stepButton" type="button" class="btn btn-outline-dark btn-sm">Addtional Instruction</button>
+	    <br>
+	    <br>
+	    <p>
+	    	<textarea name= "imageURL" class="form-control my-form" placeholder="image url for recipe card" type="text"></textarea>
+	    </p>
+	    <button type="submit" class="btn btn-outline-dark btn-sm">Add Recipe to Site</button>
+	</form>
+
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
-<script>
-function customTextAreas() {
-	var forms = document.getElementsByClassName('my-form');
+	<script type="text/javascript">
 
-	for (let form of forms) {
-		console.log("added form stuff")
+	main();
 
-		/* allows the text area to appear to grow */
-		form.addEventListener('input', function() {
-        	this.style.overflow = 'hidden';
-        	this.style.height = 0;
-        	this.style.height = this.scrollHeight + 'px';
-    	}, false);
-
-		/* having arbitrary line breaks complicates mapping to and from paragraph
-		   styling, so we disable it */
-		form.addEventListener("keypress", function (e) {
-    		if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
-				
-				e.preventDefault();
-    		}
-		}, false);
+	function main() {
+		customTextAreas();
+		stopInputSends();
 	}
-}
 
-customTextAreas();
-</script>
+	function customTextAreas() {
+		let forms = document.getElementsByClassName('my-form');
+		for (let form of forms) {
+			disableScroll(form);
+			onEnter(form, noOp);
+		}
+		
+		let ib = document.getElementById('ingredientButton');
+		ib.addEventListener('click', insertsIngredient);
+
+		let sb = document.getElementById('stepButton');
+		sb.addEventListener('click', insertsStep);
+
+	}
+
+	/* stretch goal: change to tab behavior instead of no op */
+	function noOp() {};
+
+	function stopInputSends() {
+		let inputs = document.getElementsByTagName('input');
+		for (let input of inputs) {
+			onEnter(input, noOp);
+		}
+	}
+
+	/* does is the function to apply on an enter event */
+	function onEnter(el, does) {
+		let f = function(e) {
+			if (e.code === "Enter") {  
+				e.preventDefault();
+				does();
+			}
+	    };
+
+	    el.addEventListener('keypress', f);
+	}
+
+
+	function disableScroll(el) {
+		el.addEventListener('input', function() {
+	        	this.style.overflow = 'hidden';
+	        	this.style.height = 0;
+	        	this.style.height = this.scrollHeight + 'px';
+	    	}, false);
+	}
+
+	function insertsIngredient() {
+		let p = document.createElement('p');
+		p.innerHTML = '<textarea name="ingredients" placeholder="next ingredient" class="form-control my-form my-ingredient" type="text"></textarea>';
+		let target = document.getElementById('ingredientList');
+		target.append(p)	
+	}
+
+	function insertsStep() {
+		let p = document.createElement('p');
+		p.innerHTML = '<textarea name="steps" placeholder="next instruction" class="form-control my-form" type="text"></textarea>';
+		let target = document.getElementById('stepsList');
+		target.append(p)
+	}
+
+	</script>
 
 </body>
 </html>

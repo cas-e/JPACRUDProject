@@ -33,8 +33,10 @@ public class RecipeDaoImpl implements RecipeDao {
 
 	@Override
 	public Recipe create(Recipe newRecipe) {
-		// TODO Auto-generated method stub
-		return null;
+		//em.getTransaction().begin();
+		em.persist(newRecipe);
+		//em.getTransaction().commit();
+		return newRecipe;
 	}
 
 	@Override
