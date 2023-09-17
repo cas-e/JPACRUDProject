@@ -21,7 +21,6 @@ public class RecipeDaoImpl implements RecipeDao {
 	
 	@Override
 	public Recipe findById(int recipeId) {
-		
 		return em.find(Recipe.class, recipeId);
 	}
 
@@ -33,9 +32,9 @@ public class RecipeDaoImpl implements RecipeDao {
 
 	@Override
 	public Recipe create(Recipe newRecipe) {
-		//em.getTransaction().begin();
+		
 		em.persist(newRecipe);
-		//em.getTransaction().commit();
+		
 		return newRecipe;
 	}
 

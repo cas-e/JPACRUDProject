@@ -1,5 +1,8 @@
 package com.skilldistillery.recipes.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +26,11 @@ public class RecipeController {
 	
 	@RequestMapping(path = "createForm.do")
 	public String showCreateForm(Model model) {
-		System.out.println("createForm");
+		
 		return "recipe/createForm"; // hopefully goes to createForm.jsp
 	}
 	
-	/*
-	 * when this returns sets stuff, id ends up being zero. hopefully spring rectifys_ that
-	 */
+	
 	@RequestMapping(path = "createRecipe.do", method = RequestMethod.POST)
 	public String createRecipe(
 			Model model, 
@@ -74,5 +75,38 @@ public class RecipeController {
 			
 			System.out.println("done");
 			return "home"; // send us right back for now
+	}
+	
+	@RequestMapping(path = {"displayRecipe.do"})
+	public String displayRecipe(Model model, int rid) {
+		
+		
+		
+		Recipe recipe = recipeDao.findById(rid);
+		model.addAttribute("title", recipe.getTitle());
+		model.addAttribute("time", recipe.getMakeTime());
+		model.addAttribute("serves", recipe.getServes());
+		
+		/* again, put this somewhere else later */
+		String sep = "<sep>";
+		
+		List<String> ingrs = filterEmpties(recipe.getIngredients().split(sep));
+		model.addAttribute("ingredientList", ingrs);
+		
+		List<String> steps = filterEmpties(recipe.getInstructions().split(sep));
+		model.addAttribute("stepList", steps);
+		
+		return "recipe/displayRecipe"; // just need the base name of home
+	}
+	
+	private List<String> filterEmpties(String[] ss) {
+		List<String> filtered = new ArrayList<>();
+		for (String s : ss) {
+			if (s.isEmpty()) {}
+			else {
+				filtered.add(s);
+			}
+		}
+		return filtered;
 	}
 }
