@@ -24,10 +24,16 @@
 	<br>
 	<div class="container">
 		<h1>Recipe Site</h1>
+		<br>
+		<br>
+		
+		<a href="createForm.do" class="btn btn-primary">Create New Recipe</a>
+		
 	</div>
 	<br>
 	<br>
-
+	
+	
 	<div class="container">
 
 		<div class="row">
@@ -37,9 +43,9 @@
 				<div class="col-12 col-md-6 col-lg-4">
 					<div class="card ">
 						<img src="${recipe.imageURL}">
-						<h1 class="card-title">
+						<h3 class="card-title">
 							<a href="displayRecipe.do?rid=${recipe.id} ">${recipe.title}</a>
-						</h1>
+						</h3>
 					</div>
 				</div>
 

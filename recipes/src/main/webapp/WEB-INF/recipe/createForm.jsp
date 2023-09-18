@@ -41,9 +41,10 @@
 
 
 <div class="container my-content">
-	
+	<br>
+	<br>
 	 <form action="createRecipe.do" method="post">
-
+	
 		<h1>
 		<textarea name= "recipeTitle" class="form-control my-form" placeholder="Title" type="text"></textarea>
 	    </h1>
