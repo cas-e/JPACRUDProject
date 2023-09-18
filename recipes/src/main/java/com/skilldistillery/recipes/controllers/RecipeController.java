@@ -74,7 +74,9 @@ public class RecipeController {
 			System.out.println(maybeUpdated);
 			
 			System.out.println("done");
-			return "home"; // send us right back for now
+			
+			
+			return "recipe/success"; // send us right back for now
 	}
 	
 	@RequestMapping(path = {"displayRecipe.do"})
