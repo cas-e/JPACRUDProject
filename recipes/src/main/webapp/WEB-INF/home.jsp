@@ -16,6 +16,8 @@
 	rel="stylesheet"
 	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 	crossorigin="anonymous">
+	
+	
 </head>
 <body>
 
@@ -41,11 +43,13 @@
 			<c:forEach var="recipe" items="${recipeList }">
 			
 				<div class="col-12 col-md-6 col-lg-4">
-					<div class="card ">
+					<div class="card">
 						<img src="${recipe.imageURL}">
 						<h3 class="card-title">
 							<a href="displayRecipe.do?rid=${recipe.id} ">${recipe.title}</a>
 						</h3>
+						<a href="editRecipe.do?rid=${recipe.id }" class="btn btn-primary">Edit Recipe</a>
+						<a href="deleteRecipe.do?rid=${recipe.id }" class="btn btn-danger">Delete Recipe</a>
 					</div>
 				</div>
 
@@ -60,7 +64,7 @@
 
 	</div>
 
-	</div>
+	
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

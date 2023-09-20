@@ -3,6 +3,7 @@ package com.skilldistillery.recipes.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,13 @@ public class RecipeController {
 			String[] steps,
 			String imageURL) 
 	{
+			// JPA sends NULL string arrays if the input is empty...
+			if (ingredients == null) {
+				ingredients = new String[] {""};
+			}
+			if (steps == null) {
+				steps = new String[] {""};
+			}
 		
 			Recipe recipe = new Recipe();
 			recipe.setTitle(recipeTitle);
@@ -67,16 +75,9 @@ public class RecipeController {
 			
 			recipe.setImageURL(imageURL);
 			
-			
-			System.out.println(recipe);
 			Recipe maybeUpdated = recipeDao.create(recipe);
-			
-			System.out.println(maybeUpdated);
-			
-			System.out.println("done");
-			
-			
-			return "recipe/success"; // send us right back for now
+						
+			return "recipe/success"; 
 	}
 	
 	@RequestMapping(path = {"displayRecipe.do"})
@@ -85,6 +86,8 @@ public class RecipeController {
 		
 		
 		Recipe recipe = recipeDao.findById(rid);
+		
+		
 		model.addAttribute("title", recipe.getTitle());
 		model.addAttribute("time", recipe.getMakeTime());
 		model.addAttribute("serves", recipe.getServes());
@@ -100,6 +103,101 @@ public class RecipeController {
 		
 		return "recipe/displayRecipe"; // just need the base name of home
 	}
+	
+	@RequestMapping(path= {"deleteRecipe.do"})
+	public String deleteRecipe(Model model, int rid) {
+		
+		recipeDao.deleteById(rid);
+		model.addAttribute("rid", rid);
+		return "recipe/success";
+		
+	}
+	
+	// this one just sets up the form for editing
+	@RequestMapping(path = {"editRecipe.do"})
+	public String editRecipe(Model model, int rid) {
+		
+		
+		Recipe recipe = recipeDao.findById(rid);
+		
+		model.addAttribute("recId", recipe.getId());		
+		model.addAttribute("title", recipe.getTitle());
+		model.addAttribute("time", recipe.getMakeTime());
+		model.addAttribute("serves", recipe.getServes());
+		
+		/* again, put this somewhere else later */
+		String sep = "<sep>";
+		
+		List<String> ingrs = filterEmpties(recipe.getIngredients().split(sep));
+		model.addAttribute("ingredientList", ingrs);
+		
+		List<String> steps = filterEmpties(recipe.getInstructions().split(sep));
+		model.addAttribute("stepList", steps);
+		
+		model.addAttribute("imageURL", recipe.getImageURL());
+		
+		return "recipe/editForm"; 
+	}
+	
+	// to_do: create confirm Edit . do
+	@RequestMapping(path = "confirmEdit.do", method = RequestMethod.POST)
+	public String confirmEdit(
+			Model model, 
+			String recipeTitle,
+			String time,
+			String servings,
+			String[] ingredients,
+			String[] steps,
+			String imageURL,
+			int recId) 
+	{
+		
+			System.out.println(recId);
+			
+			// JPA sends NULL string arrays if the input is empty...
+			if (ingredients == null) {
+				ingredients = new String[] {""};
+			}
+			if (steps == null) {
+				steps = new String[] {""};
+			}
+ 		
+			
+			Recipe recipe = new Recipe();
+			recipe.setId(recId);
+			recipe.setTitle(recipeTitle);
+			recipe.setMakeTime(time);
+			recipe.setServes(servings);
+			
+			/* we may need to put this logic somewhere else */
+			String sep = "<sep>";
+			
+			StringBuilder ib = new StringBuilder();
+			
+			for (String ingr : ingredients) {
+				ib.append(ingr);
+				ib.append(sep);
+			}
+			recipe.setIngredients(ib.toString());
+			
+			StringBuilder stb = new StringBuilder();
+			for (String step : steps) {
+				stb.append(step);
+				stb.append(sep);
+			}
+			recipe.setInstructions(stb.toString());
+			
+			recipe.setImageURL(imageURL);
+			
+			
+			//Recipe maybeUpdated = recipeDao.create(recipe);
+			// need to add update
+			
+			recipeDao.update(recipe);
+			
+			return "recipe/success"; 
+	}
+	
 	
 	private List<String> filterEmpties(String[] ss) {
 		List<String> filtered = new ArrayList<>();

@@ -40,13 +40,29 @@ public class RecipeDaoImpl implements RecipeDao {
 
 	@Override
 	public Recipe update(Recipe updatedRecipe) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		Recipe recipe = em.find(Recipe.class, updatedRecipe.getId());
+		
+		// why is this happening? do i need to learn reflection? or is their a better way?
+		recipe.setId(updatedRecipe.getId());
+		recipe.setTitle(updatedRecipe.getTitle());
+		recipe.setMakeTime(updatedRecipe.getMakeTime());
+		recipe.setServes(updatedRecipe.getServes());
+		recipe.setIngredients(updatedRecipe.getIngredients());
+		recipe.setInstructions(updatedRecipe.getInstructions());
+		recipe.setImageURL(updatedRecipe.getImageURL());
+		
+		return recipe;
 	}
 
 	@Override
 	public boolean deleteById(int recipeId) {
-		// TODO Auto-generated method stub
+		Recipe recipe = em.find(Recipe.class, recipeId);
+		if (recipe != null) {
+			em.remove(recipe);
+			return true;
+		}
 		return false;
 	}
 

@@ -39,7 +39,8 @@
 </nav>
 	<br>
 	<div class="container">
-		<h1>Successfully added recipe!</h1>
+		<h1>Success!</h1>
+		<a href="home.do"><h2>Click here to return home</h2></a>
 
 	</div>
 
