@@ -178,6 +178,7 @@
 	function insertsIngredient() {
 		let p = document.createElement('p');
 		p.innerHTML = '<textarea name="ingredients" placeholder="next ingredient" class="form-control my-form my-ingredient" type="text"></textarea>';
+		disableScroll(p.getElementsByTagName('textarea')[0]);
 		let target = document.getElementById('ingredientList');
 		target.append(p)	
 	}
@@ -185,6 +186,7 @@
 	function insertsStep() {
 		let p = document.createElement('p');
 		p.innerHTML = '<textarea name="steps" placeholder="next instruction" class="form-control my-form" type="text"></textarea>';
+		disableScroll(p.getElementsByTagName('textarea')[0]);
 		let target = document.getElementById('stepsList');
 		target.append(p)
 	}
