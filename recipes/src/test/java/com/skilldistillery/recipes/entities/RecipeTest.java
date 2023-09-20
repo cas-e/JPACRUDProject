@@ -45,7 +45,7 @@ class RecipeTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		em = emf.createEntityManager();
-		recipe = em.find(Recipe.class, 1);
+		recipe = em.find(Recipe.class, 3);
 	}
 
 	@AfterEach
@@ -55,10 +55,13 @@ class RecipeTest {
 	}
 
 	@Test
-	void test_basic_Actor_mappings() {
+	void test_basic_Recipe_mappings() {
 		assertNotNull(recipe);
-		assertEquals("Eggs", recipe.getTitle());
-	
+		assertEquals("Pizza Margherita", recipe.getTitle());
+		assertEquals("16 minutes", recipe.getMakeTime());
+		assertEquals("2", recipe.getServes());
+		assertTrue( ! recipe.getIngredients().isEmpty());
+		assertTrue( ! recipe.getInstructions().isEmpty());
 	}
 
 }
